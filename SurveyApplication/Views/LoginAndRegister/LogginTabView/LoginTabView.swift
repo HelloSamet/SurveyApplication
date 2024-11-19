@@ -29,23 +29,31 @@ struct LoginTabView: View {
                         
                         TabView(selection: $viewModel.pageIndex) {
                             // Giriş Yap Sekmesi
-                            LoginView(pageIndex: $viewModel.pageIndex,
-                                      loginAction:
+                            ZStack{
+                                if viewModel.openRegisterView {
+                                    RegisterView(loginAction: {
+                                        viewModel.openRegisterView = false
+                                    })
+                                }
+                                else{
+                                    LoginView(pageIndex: $viewModel.pageIndex,
+                                        loginAction:
                                         {
-                                
-                            },
-                                      registerAction:
+                                            
+                                        },
+                                        registerAction:
                                         {
-                                
-                            },
-                                      forgotPasswordAction:
+                                            viewModel.openRegisterView = true
+                                        },
+                                        forgotPasswordAction:
                                         {
-                            })
+                                            
+                                        }
+                                    )
+                                }
+                            }
                             .tag(0)
                             
-                            // Kayıt Ol Sekmesi (Örnek Boş Sayfa)
-                            RegisterView()
-                                .tag(1)
                         }
                         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                         

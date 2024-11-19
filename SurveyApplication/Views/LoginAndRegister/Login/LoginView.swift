@@ -89,7 +89,7 @@ extension LoginView {
     
     // Giriş Yap Butonu
     private var loginButton: some View {
-        Button(action: {}) {
+        Button(action: {loginAction()}) {
             RoundedRectangle(cornerRadius: 20)
                 .fill(Color.blue)
                 .frame(width: 134, height: 40)
@@ -109,7 +109,7 @@ extension LoginView {
                 .font(.footnote)
                 .foregroundColor(.gray)
             
-            Button(action: {}) {
+            Button(action: {registerAction()}) {
                 Text("Hesap Oluştur")
                     .font(.footnote)
                     .foregroundColor(.blue)
