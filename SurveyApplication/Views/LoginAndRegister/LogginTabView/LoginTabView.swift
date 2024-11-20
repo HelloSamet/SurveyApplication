@@ -33,6 +33,8 @@ struct LoginTabView: View {
                                 if viewModel.openRegisterView {
                                     RegisterView(loginAction: {
                                         viewModel.openRegisterView = false
+                                    }, continueAction: {
+                                        viewModel.pageIndex = 1
                                     })
                                 }
                                 else{
@@ -53,6 +55,8 @@ struct LoginTabView: View {
                                 }
                             }
                             .tag(0)
+                            
+                            KvkkView().tag(1)
                             
                         }
                         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
