@@ -8,13 +8,10 @@
 import SwiftUI
 
 struct RegisterView: View {
+    @StateObject var viewModel = RegisterViewModel()
     var loginAction: () -> Void
     var continueAction: () -> Void
-    @State private var selectedGender: GenderType = .none
-    @State private var email: String = ""
-    @State private var nickname: String = ""
-    @State private var password: String = ""
-    @State private var birthDate: String = ""
+    
 
     var body: some View {
         VStack(spacing: 8) {
@@ -41,11 +38,11 @@ extension RegisterView {
                 .foregroundColor(.black)
             
             HStack(spacing: 30) {
-                genderButton(title: "Kadın", isSelected: selectedGender == .female) {
-                    selectedGender = .female
+                genderButton(title: "Kadın", isSelected: viewModel.selectedGender == .female) {
+                    viewModel.selectedGender = .female
                 }
-                genderButton(title: "Erkek", isSelected: selectedGender == .male) {
-                    selectedGender = .male
+                genderButton(title: "Erkek", isSelected: viewModel.selectedGender == .male) {
+                    viewModel.selectedGender = .male
                 }
             }
         }
@@ -67,13 +64,13 @@ extension RegisterView {
     
     // Email Girişi
     private var emailSection: some View {
-        formField(title: "Email", text: $email)
+        formField(title: "Email", text: $viewModel.email)
     }
     
     // Nickname Girişi
     private var nicknameSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            formField(title: "Nickname", text: $nickname)
+            formField(title: "Nickname", text: $viewModel.nickname)
             
             Text("Gizliliğinizi önemsiyoruz, lütfen ad ve soyad girmeden nickname oluşturunuz.")
                 .font(.system(size: 9))
@@ -89,27 +86,37 @@ extension RegisterView {
                 .font(.subheadline)
                 .foregroundColor(.black)
             
-            SecureField("", text: $password)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .overlay(
-                    HStack {
-                        Spacer()
-                        Button(action: {}) {
-                            Image(systemName: false ? "eye" : "eye.slash")
-                                .resizable()
-                                .foregroundColor(.gray)
-                                .frame(width: 14, height: 12)
+            ZStack {
+                if viewModel.showPassword {
+                    TextField("", text: $viewModel.password)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                }
+                else
+                {
+                    SecureField("", text: $viewModel.password)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    
+                }
+            }.overlay{
+                HStack{
+                    Spacer()
+                    Image(systemName: viewModel.showPassword ? "eye" : "eye.slash")
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 13, height: 11)
+                        .onTapGesture {
+                            viewModel.showPassword.toggle()
                         }
-                        .padding(.trailing, 12)
-                    }
-                )
+                        .foregroundColor(.gray)
+                        .padding(.horizontal, 10)
+                }
+            }
         }
         .frame(maxWidth: 245)
     }
     
     // Doğum Tarihi Girişi
     private var birthDateSection: some View {
-        formField(title: "Doğum Tarihi", text: $birthDate)
+        formField(title: "Doğum Tarihi", text: $viewModel.birthDate)
     }
     
     // Form Alanı

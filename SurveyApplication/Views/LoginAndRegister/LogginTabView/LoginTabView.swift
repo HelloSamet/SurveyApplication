@@ -38,12 +38,7 @@ struct LoginTabView: View {
                                     })
                                 }
                                 else{
-                                    LoginView(pageIndex: $viewModel.pageIndex,
-                                        loginAction:
-                                        {
-                                            
-                                        },
-                                        registerAction:
+                                    LoginView(registerAction:
                                         {
                                             viewModel.openRegisterView = true
                                         },
@@ -58,8 +53,7 @@ struct LoginTabView: View {
                             
                             KvkkView().tag(1)
                             
-                        }
-                        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                        }.tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                         
                         bottomBar
                             .padding(.bottom, 12)

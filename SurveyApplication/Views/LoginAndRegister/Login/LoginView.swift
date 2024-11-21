@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @Binding var pageIndex: Int
-    var loginAction: () -> Void
+    @StateObject private var viewModel = LoginViewModel()
     var registerAction: () -> Void
     var forgotPasswordAction: () -> Void
     var body: some View {
@@ -43,7 +42,7 @@ extension LoginView {
                 .font(.subheadline)
                 .foregroundColor(.black)
             
-            TextField("", text: .constant(""))
+            TextField("", text: $viewModel.nickName)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             
             Text("Gizliliğinizi önemsiyoruz lütfen ad ve soyad girmeden nickname oluşturunuz.")
@@ -60,20 +59,30 @@ extension LoginView {
                 .font(.subheadline)
                 .foregroundColor(.black)
             
-            SecureField("", text: .constant(""))
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .overlay(
-                    HStack {
-                        Spacer()
-                        Button(action: {}) {
-                            Image(systemName: false ? "eye" : "eye.slash").resizable()
-                                .foregroundColor(.gray)
-                                .frame(width: 14, height: 12)
-                                
+            ZStack {
+                if viewModel.showPassword {
+                    TextField("", text: $viewModel.password)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                }
+                else
+                {
+                    SecureField("", text: $viewModel.password)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    
+                }
+            }.overlay{
+                HStack{
+                    Spacer()
+                    Image(systemName: viewModel.showPassword ? "eye" : "eye.slash")
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 13, height: 11)
+                        .onTapGesture {
+                            viewModel.showPassword.toggle()
                         }
-                        .padding(.trailing, 12)
-                    }
-                )
+                        .foregroundColor(.gray)
+                        .padding(.horizontal, 10)
+                }
+            }
             
             HStack {
                 Spacer()
@@ -89,7 +98,9 @@ extension LoginView {
     
     // Giriş Yap Butonu
     private var loginButton: some View {
-        Button(action: {loginAction()}) {
+        Button(action: {
+            
+        }) {
             RoundedRectangle(cornerRadius: 20)
                 .fill(Color.blue)
                 .frame(width: 134, height: 40)
@@ -121,9 +132,7 @@ extension LoginView {
 
 // MARK: - Preview
 #Preview {
-    LoginView(pageIndex: .constant(0), loginAction: {
-        
-    }, registerAction: {
+    LoginView(registerAction: {
         
     }, forgotPasswordAction: {
         
