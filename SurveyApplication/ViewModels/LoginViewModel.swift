@@ -13,4 +13,10 @@ class LoginViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var showPassword: Bool = false
     
+    @Published var isLoggedIn: Bool = false
+    
+    
+    func login() {
+        isLoggedIn = true
+    }
 }

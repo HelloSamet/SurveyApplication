@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @StateObject private var viewModel = LoginViewModel()
+    @StateObject var viewModel: LoginViewModel
     var registerAction: () -> Void
     var forgotPasswordAction: () -> Void
     var body: some View {
@@ -99,7 +99,7 @@ extension LoginView {
     // Giriş Yap Butonu
     private var loginButton: some View {
         Button(action: {
-            
+            viewModel.login()
         }) {
             RoundedRectangle(cornerRadius: 20)
                 .fill(Color.blue)
@@ -132,7 +132,7 @@ extension LoginView {
 
 // MARK: - Preview
 #Preview {
-    LoginView(registerAction: {
+    LoginView(viewModel: LoginViewModel(), registerAction: {
         
     }, forgotPasswordAction: {
         

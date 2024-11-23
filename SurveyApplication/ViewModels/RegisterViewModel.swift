@@ -14,4 +14,14 @@ class RegisterViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var showPassword: Bool = false
     @Published var birthDate: String = ""
+    
+    @Published var toggleField1: Bool = false
+    @Published var toggleField2: Bool = false
+    @Published var toggleField3: Bool = false
+    
+    @Published var isRegistering: Bool = false
+    
+    func register() {
+        isRegistering = true
+    }
 }

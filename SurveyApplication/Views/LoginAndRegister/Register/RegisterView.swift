@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RegisterView: View {
-    @StateObject var viewModel = RegisterViewModel()
+    @StateObject var viewModel: RegisterViewModel
     var loginAction: () -> Void
     var continueAction: () -> Void
     
@@ -168,7 +168,7 @@ extension RegisterView {
 
 // MARK: - Preview
 #Preview {
-    RegisterView(loginAction: {
+    RegisterView(viewModel: RegisterViewModel(), loginAction: {
         print("Login Action Triggered")
     }, continueAction: {
         print("Register Action Triggered")
