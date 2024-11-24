@@ -8,102 +8,115 @@
 import SwiftUI
 
 struct MainView: View {
+    @State var selectedPage: mainViewPages = .home
     var body: some View {
         VStack {
-            ZStack(alignment: .bottom) {
-                // Arka Plan Resmi
-                Image("mainBackground")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(height: 425) // Resim yüksekliği
-                    .clipped() // Çerçeve dışını kes
-                
-                // Alt Kısımdaki Beyaz Geçiş
-                LinearGradient(
-                    colors: [
-                        Color.clear, // Transparan başlar
-                        Color.white.opacity(0.8), // Yumuşak geçiş
-                        Color.white // Tam beyaz
-                    ],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .frame(height: 200) // Gradient yüksekliği
-            }
-            Spacer()
-            Text("Merhaba ").font(.title3)
-            +
-            Text("Hellosamet").foregroundStyle(.blue)
-                .font(.title3)
-            
-            Button(action: {
-                
-            }, label: {
-                ZStack{
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(Color.blue)
-                        .frame(width: 178, height: 40)
-                    Text("Ankete Başla").foregroundStyle(.white)
-                        .font(.title3)
-                }
-            }).padding(.top, 35)
-            Spacer().frame(height: 150)
             ZStack{
-                RoundedRectangle(cornerRadius: 20)
-                
-                HStack{
-                    Button(action: {
-                        
-                    }, label: {
-                        VStack{
-                            Image(systemName: "scribble.variable").resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 25)
-                                .foregroundStyle(.white)
-                            Text("Anket").font(.caption)
-                                .foregroundStyle(.white)
-                        }
-                    })
-                    Spacer()
-                    Button(action: {
-                        
-                    }, label: {
-                        ZStack{
-                            Circle()
-                                .fill(Color.blue)
-                            
-                            Image(systemName: "house.fill").resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundStyle(.white)
-                                .frame(width: 25)
-                        }
-                        .frame(width: 50, height: 50)
-                    }).offset(y: -25)
-                    
-                    Spacer()
-                    Button(action: {
-                        
-                    }, label: {
-                        VStack{
-                            Image(systemName: "person.fill").resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 25)
-                                .foregroundStyle(.white)
-                            
-                        Text("Profil").font(.caption)
-                            .foregroundStyle(.white)
-                        }
-                    })
-                }.padding(.horizontal, 65)
+                switch selectedPage {
+                case .home:
+                    HomeView()
+                case .survey:
+                    SurveyView()
+                case .profile:
+                    ProfileView()
+                }
             }
-            .frame(width: 340, height: 58)
-            Spacer()
+            HStack {
+                // Sol Buton: Anket
+                CustomTabButton(
+                    imageName: "scribble.variable",
+                    title: "Anket",
+                    isSelected: selectedPage == .survey,
+                    action: { selectedPage = .survey }
+                )
+                
+                Spacer()
+                
+                // Ortadaki Buton: Ana Sayfa
+                CustomCenterButton(
+                    imageName: "house.fill",
+                    isSelected: selectedPage == .home,
+                    action: { selectedPage = .home }
+                )
+                
+                Spacer()
+                
+                // Sağ Buton: Profil
+                CustomTabButton(
+                    imageName: "person.fill",
+                    title: "Profil",
+                    isSelected: selectedPage == .profile,
+                    action: { selectedPage = .profile }
+                )
+            }
+            .padding(.horizontal, 65)
+            .background{
+                RoundedRectangle(cornerRadius: 100)
+                    .frame(width: 340, height: 58)
+            }
+            Spacer().frame(height: 40)
         }
         .edgesIgnoringSafeArea(.all) // ZStack'i tüm alanı kapsat
-    
+        
     }
 }
 
+struct CustomCenterButton: View {
+    let imageName: String
+    let isSelected: Bool
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            ZStack {
+                Circle()
+                    .fill(isSelected ? Color.blue : Color.black)
+                    .frame(width: 50, height: 50)
+                
+                Image(systemName: imageName)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 25)
+                    .foregroundStyle(Color.white)
+            }
+        }
+        .offset(y: -25) // Ortadaki buton yukarı taşınır
+    }
+}
+
+struct CustomTabButton: View {
+    let imageName: String
+    let title: String
+    let isSelected: Bool
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            VStack {
+                Image(systemName: imageName)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 25)
+                    .foregroundStyle(isSelected ? Color.blue : Color.white)
+                
+                Text(title)
+                    .font(.caption)
+                    .foregroundStyle(isSelected ? Color.blue : Color.white)
+            }
+        }
+    }
+}
+
+
+
 #Preview {
     MainView()
+}
+
+enum mainViewPages: String, CaseIterable, Identifiable {
+    case survey
+    case home
+    case profile
+    
+    var id: Self { self }
 }
